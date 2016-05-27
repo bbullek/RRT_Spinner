@@ -1,0 +1,103 @@
+<!--
+	HTML5 Canvas + JavaScript winning wheel "RRT_Spinner.js"
+	Created by Douglas McKechie @ http://www.dougtesting.net as an example.
+	Last updated 20 Feb 2016.
+
+	Code to render and spin the wheel is in RRT_Spinner.js.
+
+	LICENSE:
+    The code is open source and you are allowed to modify and use it however you wish.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+    Enjoy :)
+-->
+<html>
+	<head>
+		<title>RRT Spinner</title>
+		<link rel="stylesheet" href="main.css" type="text/css" />
+        <script type="text/javascript" src="RRT_Spinner.js"></script>
+		<script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/latest/TweenMax.min.js"></script>
+
+	</head>
+	<body>
+		<div align="center">
+			<h1>RRT Spinner</h1>
+			<p>Use the spinner, then follow the instruction of the segment you land on.</p>
+			<table cellpadding="0" cellspacing="0" border="0">
+            <tr>
+                <td>
+                    <div class="power_controls">
+                        <br />
+                        <img id="spin_button"><br />
+												<a href="#" onClick="startSpin(); return false;">Spin the Wheel</a><br />
+                        <br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onClick="resetWheel(); return false;">Reset</a>
+                    </div>
+                </td>
+                <td width="500" height="520" class="the_wheel" align="center" valign="center">
+                    <canvas id="canvas" width="400" height="400">
+                        <p style="{color: white}" align="center">Sorry, your browser doesn't support canvas. Please try another.</p>
+                    </canvas>
+										<div style="display:none;">
+												<img id="arrow" width="10" height="10" src="arrow.png" alt="Arrow">
+										<div>
+                </td>
+            </tr>
+        </table>
+		<script>
+			// Create new wheel object specifying the parameters at creation time.
+			var theWheel = new RRT_Spinner({
+				'numSegments'  : 2,
+				'outerRadius'  : 170,
+				'textFontSize' : 15,
+				'segments'     :
+				[
+				   {'fillStyle' : '#89f26e', 'text' : "Answer Honestly", 'size' : RRT_SpinnerPercentToDegrees(40)},
+				   {'fillStyle' : '#e7706f', 'text' : "Answer Yes", 'size' : RRT_SpinnerPercentToDegrees(60)}
+				],
+				'animation' :
+				{
+					'type'     : 'spinToStop',
+					'duration' : 5,
+					'spins'    : 8
+				}
+			});
+
+			var wheelSpinning = false;
+
+			// -------------------------------------------------------
+			// Click handler for spin button.
+			// -------------------------------------------------------
+			function startSpin()
+			{
+				// Ensure that spinning can't be clicked again while already running.
+				if (wheelSpinning == false) {
+					// Disable the spin button so can't click again while wheel is spinning.
+					document.getElementById('spin_button').src       = "";
+					document.getElementById('spin_button').className = "";
+
+					// Begin the spin animation by calling startAnimation on the wheel object.
+					theWheel.startAnimation();
+
+					wheelSpinning = true;
+				}
+			}
+
+			// -------------------------------------------------------
+			// Function for reset button.
+			// -------------------------------------------------------
+			function resetWheel()
+			{
+				theWheel.stopAnimation(false);  // Stop the animation, false as param so does not call callback function.
+				theWheel.rotationAngle = 0;     // Re-set the wheel angle to 0 degrees.
+				theWheel.draw();                // Call draw to render changes to the wheel.
+
+				wheelSpinning = false;          // Reset to false so spin can be clicked again.
+			}
+
+		</script>
+	</body>
+</html>
